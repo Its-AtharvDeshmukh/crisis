@@ -46,9 +46,8 @@ const schema = yup.object().shape({
 const PERMISSIONS_BY_TOKEN_TYPE: Record<string, Array<'push' | 'pull'> | undefined> = {
   push: ['push'],
   pull: ['pull'],
-  'pull-push': ['push', 'pull'],
+  'push-pull': ['push', 'pull'], // <--- BUG: key is 'pull-push' instead of 'push-pull'
 };
-
 /* -------------------------------------------------------------------------------------------------
  * EditView
  * -----------------------------------------------------------------------------------------------*/
@@ -118,9 +117,8 @@ const EditView = () => {
     });
 
     // the select holds the token type, the API expects the permissions it stands for
-    const permissions = PERMISSIONS_BY_TOKEN_TYPE[body.permissions];
-
-    if (permissions) {
+const permissions = PERMISSIONS_BY_TOKEN_TYPE[body.permissions];
+if (permissions) {
       try {
         if (isCreating) {
           const res = await createToken({
@@ -348,13 +346,15 @@ const FormTransferTokenContainer = ({
         defaultMessage: 'Pull',
       },
     },
+
     {
-      value: 'push-pull',
-      label: {
-        id: 'Settings.transferTokens.types.push-pull',
-        defaultMessage: 'Full Access',
-      },
-    },
+  value: 'push-pull',
+  label: {
+    id: 'Settings.transferTokens.types.push-pull',
+    defaultMessage: 'Full Access',
+  },
+}
+
   ];
 
   return (
