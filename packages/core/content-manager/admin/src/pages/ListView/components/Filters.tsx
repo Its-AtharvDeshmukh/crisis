@@ -44,7 +44,7 @@ const USER_FILTER_ATTRIBUTES = new Set([...CREATOR_FIELDS, 'strapi_assignee']);
  * Operators whose operand is the admin user a filter selects. Those ids are resolved to display
  * names, so the matching users have to be fetched alongside the list.
  */
-const USER_SELECTION_OPERATORS = ['$eq', '$in'];
+const USER_SELECTION_OPERATORS = ['$eq', '$ne', '$in'];
 
 const getSelectedUserIds = (
   appliedFilters: NonNullable<NonNullable<Filters.Query['filters']>['$and']>,
@@ -114,7 +114,7 @@ const Root = ({ disabled, schema, layout, children }: FiltersProps) => {
     [attributes]
   );
 
-  const selectedUserIds = React.useMemo(
+ const selectedUserIds = React.useMemo(
     () => getSelectedUserIds(query?.filters?.$and ?? [], isUserAttribute),
     [isUserAttribute, query?.filters?.$and]
   );
@@ -124,7 +124,8 @@ const Root = ({ disabled, schema, layout, children }: FiltersProps) => {
     {
       // fetch the list of admin users only if the filter contains users and the
       // current user has permissions to display users
-      skip: selectedUserIds.length === 0 || !canReadAdminUsers,
+      // skip: selectedUserIds.length === 0 || !canReadAdminUsers,
+      skip: selectedUserIds.length === 0 || !canReadAdminUsers
     }
   );
 
